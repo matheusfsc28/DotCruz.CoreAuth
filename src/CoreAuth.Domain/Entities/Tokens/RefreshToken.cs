@@ -34,7 +34,7 @@ namespace CoreAuth.Domain.Entities.Tokens
                 errors.Add(ResourceMessagesException.TOKEN_EMPTY);
 
             if (IsExpired) 
-                errors.Add(ResourceMessagesException.EXPIRATION_DATE_EARLIER_CURRENT_DATE);]
+                errors.Add(ResourceMessagesException.EXPIRATION_DATE_EARLIER_CURRENT_DATE);
 
             if (errors.Count > 0)
                 throw new ErrorOnValidationException(errors);
