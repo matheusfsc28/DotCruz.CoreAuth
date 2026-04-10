@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CoreAuth.Domain\CoreAuth.Domain.csproj" />
+    <ProjectReference Include="..\..\src\CoreAuth.Application\CoreAuth.Application.csproj" />
   </ItemGroup>
 
 </Project>
