@@ -1,3 +1,4 @@
+using CoreAuth.Domain.Entities.Users;
 using CoreAuth.Domain.Interfaces.Repositories.Users;
 using Moq;
 
@@ -13,6 +14,17 @@ namespace CommonTestUtilities.Repositories.Users
         {
             _repository.Setup(repo => repo.ExistsActiveUserWithEmailAsync(email, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(exists);
+
+            return this;
+        }
+
+        public UserReadRepositoryBuilder SetupGetUserByEmail(User? user)
+        {
+            if (user is not null)
+            {
+                _repository.Setup(repo => repo.GetUserByEmailAsync(It.Is<string>(e => e.ToLower() == user.Email.ToLower()), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(user);
+            }
 
             return this;
         }

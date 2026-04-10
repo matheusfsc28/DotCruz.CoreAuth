@@ -14,5 +14,10 @@ namespace CoreAuth.Infrastructure.Repositories.Users
         {
             return await _dbSet.AsNoTracking().AnyAsync(u => u.Email == email, cancellationToken);
         }
+
+        public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+        }
     }
 }

@@ -156,4 +156,7 @@
   <data name="ID_EMPTY" xml:space="preserve">
     <value>O ID não pode estar vazio.</value>
   </data>
+  <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
+    <value>E-mail ou senha inválidos.</value>
+  </data>
 </root>

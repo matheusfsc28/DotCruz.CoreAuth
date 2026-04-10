@@ -14,6 +14,14 @@ namespace CommonTestUtilities.Security
             _hasher.Setup(h => h.HashPassword(It.IsAny<string>())).Returns((string password) => $"hashed_{password}");
         }
 
+        public PasswordHasherBuilder SetupVerifyPassword(bool match)
+        {
+            _hasher.Setup(h => h.VerifyPassword(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(match);
+
+            return this;
+        }
+
         public IPasswordHasher Build() => _hasher.Object;
     }
 }
