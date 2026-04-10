@@ -11,7 +11,7 @@ using CoreAuth.Domain.Interfaces.Security.Tokens;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace CommonTestUtilities.UseCases.Users
+namespace CommonTestUtilities.Commands.Users
 {
     public class LoginCommandHandlerBuilder
     {

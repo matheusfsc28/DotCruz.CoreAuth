@@ -4,7 +4,7 @@ using CoreAuth.Domain.Interfaces.Repositories.Users;
 using CommonTestUtilities.Data;
 using CommonTestUtilities.Repositories.Users;
 
-namespace CommonTestUtilities.UseCases.Users
+namespace CommonTestUtilities.Commands.Users
 {
     public class UpdateUserCommandHandlerBuilder
     {

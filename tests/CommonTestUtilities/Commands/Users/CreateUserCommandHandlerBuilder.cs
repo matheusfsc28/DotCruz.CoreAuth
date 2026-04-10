@@ -6,7 +6,7 @@ using CommonTestUtilities.Data;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Security;
 
-namespace CommonTestUtilities.UseCases.Users
+namespace CommonTestUtilities.Commands.Users
 {
     public class CreateUserCommandHandlerBuilder
     {
