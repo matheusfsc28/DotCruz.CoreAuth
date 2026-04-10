@@ -1,7 +1,7 @@
+using CommonTestUtilities.Commands.Users;
 using CommonTestUtilities.Entities.Users;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Requests.Users;
-using CommonTestUtilities.UseCases.Users;
 using CoreAuth.Exceptions;
 using CoreAuth.Exceptions.BaseExceptions;
 
