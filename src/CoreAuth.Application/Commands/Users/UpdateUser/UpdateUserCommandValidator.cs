@@ -1,27 +1,23 @@
 using CoreAuth.Exceptions;
 using FluentValidation;
 
-namespace CoreAuth.Application.Commands.Users.CreateUser
+namespace CoreAuth.Application.Commands.Users.UpdateUser
 {
-    public class CreateUserValidator : AbstractValidator<CreateUserCommand>
+    public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     {
-        public CreateUserValidator()
+        public UpdateUserCommandValidator()
         {
-            RuleFor(x => x.Name)
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage(ResourceMessagesException.ID_EMPTY);
+
+            RuleFor(x => x.Request.Name)
                 .NotEmpty().WithMessage(ResourceMessagesException.NAME_EMPTY)
                 .MaximumLength(200).WithMessage(string.Format(ResourceMessagesException.NAME_MAX_LENGTH, 200));
 
-            RuleFor(x => x.Email)
+            RuleFor(x => x.Request.Email)
                 .NotEmpty().WithMessage(ResourceMessagesException.EMAIL_EMPTY)
                 .MaximumLength(200).WithMessage(string.Format(ResourceMessagesException.EMAIL_MAX_LENGTH, 200))
                 .EmailAddress().WithMessage(ResourceMessagesException.EMAIL_INVALID);
-
-            RuleFor(x => x.Password)
-                .NotEmpty().WithMessage(ResourceMessagesException.PASSWORD_EMPTY)
-                .MinimumLength(8).WithMessage(string.Format(ResourceMessagesException.PASSWORD_MIN_LENGTH, 8));
-            
-            RuleFor(x => x.Type)
-                .IsInEnum();
         }
     }
 }

@@ -158,5 +158,23 @@ namespace CoreAuth.Exceptions {
                 return ResourceManager.GetString("PASSWORD_MIN_LENGTH", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a User not found..
+        /// </summary>
+        public static string USER_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("USER_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The ID cannot be empty..
+        /// </summary>
+        public static string ID_EMPTY {
+            get {
+                return ResourceManager.GetString("ID_EMPTY", resourceCulture);
+            }
+        }
     }
 }

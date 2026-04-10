@@ -8,14 +8,14 @@ using MediatR;
 
 namespace CoreAuth.Application.Commands.Users.CreateUser
 {
-    public class CreateUserHandler : IRequestHandler<CreateUserCommand, Guid>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
     {
         private readonly IUserWriteRepository _userWriteRepository;
         private readonly IUserReadRepository _userReadRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
 
-        public CreateUserHandler(
+        public CreateUserCommandHandler(
             IUserWriteRepository userWriteRepository,
             IUserReadRepository userReadRepository,
             IUnitOfWork unitOfWork,

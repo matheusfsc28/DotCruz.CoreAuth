@@ -4,6 +4,6 @@ namespace CommonTestUtilities.Validators.Users
 {
     public class CreateUserCommandValidatorBuilder
     {
-        public static CreateUserValidator Build() => new CreateUserValidator();
+        public static CreateUserCommandValidator Build() => new CreateUserCommandValidator();
     }
 }
