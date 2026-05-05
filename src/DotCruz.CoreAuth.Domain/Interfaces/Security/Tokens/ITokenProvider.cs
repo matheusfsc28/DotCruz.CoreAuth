@@ -3,5 +3,6 @@
     public interface ITokenProvider
     {
         public string Value();
+        public string Hash(string token);
     }
 }

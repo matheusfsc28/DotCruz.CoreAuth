@@ -5,5 +5,6 @@ namespace DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens
 {
     public interface IPasswordResetTokenReadRepository : IBaseReadRepository<PasswordResetToken>
     {
+        Task<PasswordResetToken?> GetByTokenAsync(string token, CancellationToken cancellationToken);
     }
 }

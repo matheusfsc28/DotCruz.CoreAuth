@@ -1,0 +1,46 @@
+using DotCruz.CoreAuth.Domain.Interfaces.Data;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
+using DotCruz.CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
+using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Exceptions.BaseExceptions;
+using MediatR;
+
+namespace DotCruz.CoreAuth.Application.Commands.Auth.PasswordResetTokens.ResetPassword
+{
+    public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand>
+    {
+        private readonly IPasswordResetTokenReadRepository _tokenReadRepository;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly ITokenProvider _tokenProvider;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public ResetPasswordCommandHandler(
+            IPasswordResetTokenReadRepository tokenReadRepository,
+            IPasswordHasher passwordHasher,
+            ITokenProvider tokenProvider,
+            IUnitOfWork unitOfWork)
+        {
+            _tokenReadRepository = tokenReadRepository;
+            _passwordHasher = passwordHasher;
+            _tokenProvider = tokenProvider;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+        {
+            var hashedToken = _tokenProvider.Hash(request.Token);
+            var token = await _tokenReadRepository.GetByTokenAsync(hashedToken, cancellationToken);
+
+            if (token is null || token.IsExpired || token.User is null)
+                throw new NotFoundException(ResourceMessagesException.TOKEN_INVALID);
+
+            var newPasswordHash = _passwordHasher.HashPassword(request.NewPassword);
+
+            token.User.Update(null, null, newPasswordHash, null);
+            token.MarkAsUsed();
+
+            await _unitOfWork.CommitAsync(cancellationToken);
+        }
+    }
+}

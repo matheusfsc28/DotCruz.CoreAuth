@@ -159,4 +159,7 @@
   <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
     <value>E-mail ou senha inválidos.</value>
   </data>
+  <data name="TOKEN_INVALID" xml:space="preserve">
+    <value>Token inválido ou expirado.</value>
+  </data>
 </root>

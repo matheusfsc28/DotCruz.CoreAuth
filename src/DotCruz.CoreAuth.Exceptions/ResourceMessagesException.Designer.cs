@@ -185,5 +185,14 @@ namespace DotCruz.CoreAuth.Exceptions {
                 return ResourceManager.GetString("EMAIL_OR_PASSWORD_INVALID", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Token invalid or expired..
+        /// </summary>
+        public static string TOKEN_INVALID {
+            get {
+                return ResourceManager.GetString("TOKEN_INVALID", resourceCulture);
+            }
+        }
     }
 }
