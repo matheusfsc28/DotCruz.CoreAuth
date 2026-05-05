@@ -14,7 +14,7 @@ namespace Command.Test.Users.CreateUser
             var command = CreateUserCommandBuilder.Build();
             var handler = new CreateUserCommandHandlerBuilder().Build();
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, TestContext.Current.CancellationToken);
 
             Assert.IsType<Guid>(result);
             Assert.NotEqual(Guid.Empty, result);
@@ -33,7 +33,7 @@ namespace Command.Test.Users.CreateUser
                 .SetUserReadRepository(userReadRepository)
                 .Build();
 
-            Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
+            Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 
             var exception = await Assert.ThrowsAsync<ErrorOnValidationException>(act);
             

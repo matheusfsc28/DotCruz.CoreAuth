@@ -24,7 +24,7 @@ namespace Command.Test.Users.UpdateUser
                 .SetUserWriteRepository(userWriteRepository)
                 .Build();
 
-            await handler.Handle(command, CancellationToken.None);
+            await handler.Handle(command, TestContext.Current.CancellationToken);
 
             Assert.Equal(command.Request.Name, user.Name);
             Assert.Equal(command.Request.Email.ToLowerInvariant(), user.Email);
@@ -43,7 +43,7 @@ namespace Command.Test.Users.UpdateUser
                 .SetUserWriteRepository(userWriteRepository)
                 .Build();
 
-            Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
+            Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 
             var exception = await Assert.ThrowsAsync<NotFoundException>(act);
 
@@ -70,7 +70,7 @@ namespace Command.Test.Users.UpdateUser
                 .SetUserReadRepository(userReadRepository)
                 .Build();
 
-            Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
+            Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 
             var exception = await Assert.ThrowsAsync<ErrorOnValidationException>(act);
 

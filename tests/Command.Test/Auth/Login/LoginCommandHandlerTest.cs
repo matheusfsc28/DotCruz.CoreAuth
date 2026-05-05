@@ -39,7 +39,7 @@ namespace Command.Test.Auth.Login
                 .SetRefreshTokenGenerator(refreshTokenGenerator.Object)
                 .Build();
 
-            var result = await handler.Handle(command, CancellationToken.None);
+            var result = await handler.Handle(command, TestContext.Current.CancellationToken);
 
             Assert.NotNull(result);
             Assert.Equal(user.Id, result.Id);
@@ -62,7 +62,7 @@ namespace Command.Test.Auth.Login
                 .SetUserReadRepository(userReadRepository)
                 .Build();
 
-            Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
+            Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 
             var exception = await Assert.ThrowsAsync<InvalidLoginException>(act);
 
@@ -88,7 +88,7 @@ namespace Command.Test.Auth.Login
                 .SetPasswordHasher(passwordHasher)
                 .Build();
 
-            Func<Task> act = async () => await handler.Handle(command, CancellationToken.None);
+            Task act() => handler.Handle(command, TestContext.Current.CancellationToken);
 
             var exception = await Assert.ThrowsAsync<InvalidLoginException>(act);
 
