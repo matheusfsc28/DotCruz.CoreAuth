@@ -1,6 +1,6 @@
-using CoreAuth.Application.Commands.Users.UpdateUser;
-using CoreAuth.Domain.Interfaces.Data;
-using CoreAuth.Domain.Interfaces.Repositories.Users;
+using DotCruz.CoreAuth.Application.Commands.Users.UpdateUser;
+using DotCruz.CoreAuth.Domain.Interfaces.Data;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
 using CommonTestUtilities.Data;
 using CommonTestUtilities.Repositories.Users;
 

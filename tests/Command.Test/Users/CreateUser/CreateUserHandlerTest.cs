@@ -1,8 +1,8 @@
 using CommonTestUtilities.Commands.Users;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Requests.Users;
-using CoreAuth.Exceptions;
-using CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Exceptions.BaseExceptions;
 
 namespace Command.Test.Users.CreateUser
 {

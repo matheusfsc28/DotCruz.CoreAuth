@@ -1,6 +1,6 @@
 ﻿using CommonTestUtilities.Entities.Tokens;
-using CoreAuth.Exceptions;
-using CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Exceptions.BaseExceptions;
 
 namespace Domain.Test.Tokens
 {

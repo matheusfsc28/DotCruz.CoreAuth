@@ -1,6 +1,6 @@
 using Bogus;
-using CoreAuth.Application.Commands.Users.CreateUser;
-using CoreAuth.Domain.Enums.Users;
+using DotCruz.CoreAuth.Application.Commands.Users.CreateUser;
+using DotCruz.CoreAuth.Domain.Enums.Users;
 
 namespace CommonTestUtilities.Requests.Users
 {

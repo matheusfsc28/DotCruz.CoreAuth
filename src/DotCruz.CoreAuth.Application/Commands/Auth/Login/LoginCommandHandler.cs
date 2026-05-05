@@ -1,0 +1,77 @@
+using DotCruz.CoreAuth.Common.Settings;
+using DotCruz.CoreAuth.Domain.Entities.Tokens;
+using DotCruz.CoreAuth.Domain.Interfaces.Data;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
+using DotCruz.CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
+using DotCruz.CoreAuth.Exceptions.BaseExceptions;
+using MediatR;
+using Microsoft.Extensions.Options;
+
+namespace DotCruz.CoreAuth.Application.Commands.Auth.Login
+{
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, ResponseLoginDto>
+    {
+        private readonly IUserReadRepository _userReadRepository;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IAccessTokenGenerator _accessTokenGenerator;
+        private readonly IRefreshTokenGenerator _refreshTokenGenerator;
+        private readonly IRefreshTokenWriteRepository _refreshTokenWriteRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly JwtTokenSettings _jwtTokenSettings;
+
+        public LoginCommandHandler(
+            IUserReadRepository userReadRepository,
+            IPasswordHasher passwordHasher,
+            IAccessTokenGenerator accessTokenGenerator,
+            IRefreshTokenGenerator refreshTokenGenerator,
+            IRefreshTokenWriteRepository refreshTokenWriteRepository,
+            IUnitOfWork unitOfWork,
+            IOptions<JwtTokenSettings> jwtTokenSettings)
+        {
+            _userReadRepository = userReadRepository;
+            _passwordHasher = passwordHasher;
+            _accessTokenGenerator = accessTokenGenerator;
+            _refreshTokenGenerator = refreshTokenGenerator;
+            _refreshTokenWriteRepository = refreshTokenWriteRepository;
+            _unitOfWork = unitOfWork;
+            _jwtTokenSettings = jwtTokenSettings.Value;
+        }
+
+        public async Task<ResponseLoginDto> Handle(LoginCommand request, CancellationToken cancellationToken)
+        {
+            var email = request.Email.ToLowerInvariant();
+
+            var user = await _userReadRepository.GetUserByEmailAsync(email, cancellationToken);
+
+            if (user is null)
+                throw new InvalidLoginException();
+
+            var passwordMatch = _passwordHasher.VerifyPassword(request.Password, user.PasswordHash);
+
+            if (!passwordMatch)
+                throw new InvalidLoginException();
+
+            var accessToken = _accessTokenGenerator.Generate(user.Id);
+            var refreshTokenString = _refreshTokenGenerator.Generate();
+
+            var refreshToken = new RefreshToken(
+                refreshTokenString,
+                DateTime.UtcNow.AddDays(_jwtTokenSettings.RefreshTokenExpirationTimeDays),
+                user.Id
+            );
+
+            await _refreshTokenWriteRepository.AddAsync(refreshToken, cancellationToken);
+
+            await _unitOfWork.CommitAsync(cancellationToken);
+
+            return new ResponseLoginDto(
+                user.Id,
+                user.Name,
+                user.Email,
+                new ResponseTokensDto(accessToken, refreshTokenString)
+            );
+        }
+    }
+}

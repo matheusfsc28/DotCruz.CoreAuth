@@ -1,7 +1,7 @@
-# CoreAuth Project
+# DotCruz.CoreAuth Project
 
 ## Project Overview
-CoreAuth is a modular authentication core system built with **.NET 10.0** and **Clean Architecture**. It follows **Domain-Driven Design (DDD)** principles to provide a robust and maintainable foundation for user management and authentication processes.
+DotCruz.CoreAuth is a modular authentication core system built with **.NET 10.0** and **Clean Architecture**. It follows **Domain-Driven Design (DDD)** principles to provide a robust and maintainable foundation for user management and authentication processes.
 
 ### Technologies
 - **Runtime:** .NET 10.0
@@ -13,11 +13,11 @@ CoreAuth is a modular authentication core system built with **.NET 10.0** and **
 
 ### Architecture
 The project is divided into several layers according to Clean Architecture:
-- **CoreAuth.Domain:** Contains core business logic, entities (`User`, `RefreshToken`, `PasswordResetToken`), enums, and repository interfaces.
-- **CoreAuth.Application:** Implements use cases, commands, and queries (e.g., `CreateUserCommand`).
-- **CoreAuth.Infrastructure:** Handles external concerns like data access (EF Core), repository implementations, Unit of Work, and dependency injection configuration.
-- **CoreAuth.Exceptions:** Centralized exception handling and localized resource messages (`ResourceMessagesException`).
-- **CoreAuth.Common:** Shared utilities, settings (e.g., `JwtTokenSettings`), and common logic.
+- **DotCruz.CoreAuth.Domain:** Contains core business logic, entities (`User`, `RefreshToken`, `PasswordResetToken`), enums, and repository interfaces.
+- **DotCruz.CoreAuth.Application:** Implements use cases, commands, and queries (e.g., `CreateUserCommand`).
+- **DotCruz.CoreAuth.Infrastructure:** Handles external concerns like data access (EF Core), repository implementations, Unit of Work, and dependency injection configuration.
+- **DotCruz.CoreAuth.Exceptions:** Centralized exception handling and localized resource messages (`ResourceMessagesException`).
+- **DotCruz.CoreAuth.Common:** Shared utilities, settings (e.g., `JwtTokenSettings`), and common logic.
 
 ## Building and Running
 
@@ -45,15 +45,15 @@ The project is divided into several layers according to Clean Architecture:
 ### Data Access
 - **Repository Pattern:** Interfaces for reading and writing are split (e.g., `IUserReadRepository`, `IUserWriteRepository`).
 - **Unit of Work:** Used to coordinate changes across multiple repositories.
-- **Soft Delete:** Implemented via a `BaseEntity` with a `DeletedAt` property. A Global Query Filter in `CoreAuthDbContext` automatically excludes soft-deleted records.
+- **Soft Delete:** Implemented via a `BaseEntity` with a `DeletedAt` property. A Global Query Filter in `DotCruz.CoreAuthDbContext` automatically excludes soft-deleted records.
 - **Snake Case:** All database tables and columns use `snake_case` naming conventions.
 
 ### Error Handling
-- Use the custom exceptions defined in `CoreAuth.Exceptions.BaseExceptions`.
+- Use the custom exceptions defined in `DotCruz.CoreAuth.Exceptions.BaseExceptions`.
 - Localized messages are stored in `.resx` files and accessed via `ResourceMessagesException`.
 
 ### Testing
-CoreAuth follows a comprehensive testing strategy focused on reliability and maintainability.
+DotCruz.CoreAuth follows a comprehensive testing strategy focused on reliability and maintainability.
 
 #### Tools & Libraries
 - **xUnit:** The primary testing framework.

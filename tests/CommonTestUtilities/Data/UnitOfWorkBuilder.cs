@@ -1,4 +1,4 @@
-using CoreAuth.Domain.Interfaces.Data;
+using DotCruz.CoreAuth.Domain.Interfaces.Data;
 using Moq;
 
 namespace CommonTestUtilities.Data

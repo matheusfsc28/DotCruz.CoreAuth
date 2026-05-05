@@ -1,13 +1,13 @@
 using CommonTestUtilities.Data;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Security;
-using CoreAuth.Application.Commands.Auth.Login;
-using CoreAuth.Common.Settings;
-using CoreAuth.Domain.Interfaces.Data;
-using CoreAuth.Domain.Interfaces.Repositories.Tokens;
-using CoreAuth.Domain.Interfaces.Repositories.Users;
-using CoreAuth.Domain.Interfaces.Security;
-using CoreAuth.Domain.Interfaces.Security.Tokens;
+using DotCruz.CoreAuth.Application.Commands.Auth.Login;
+using DotCruz.CoreAuth.Common.Settings;
+using DotCruz.CoreAuth.Domain.Interfaces.Data;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
+using DotCruz.CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
 using Microsoft.Extensions.Options;
 using Moq;
 

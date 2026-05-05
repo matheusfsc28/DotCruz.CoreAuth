@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CoreAuth.Domain\CoreAuth.Domain.csproj" />
-    <ProjectReference Include="..\..\src\CoreAuth.Application\CoreAuth.Application.csproj" />
+    <ProjectReference Include="..\..\src\DotCruz.CoreAuth.Domain\DotCruz.CoreAuth.Domain.csproj" />
+    <ProjectReference Include="..\..\src\DotCruz.CoreAuth.Application\DotCruz.CoreAuth.Application.csproj" />
   </ItemGroup>
 
 </Project>

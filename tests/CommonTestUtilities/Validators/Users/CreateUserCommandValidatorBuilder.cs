@@ -1,4 +1,4 @@
-using CoreAuth.Application.Commands.Users.CreateUser;
+using DotCruz.CoreAuth.Application.Commands.Users.CreateUser;
 
 namespace CommonTestUtilities.Validators.Users
 {

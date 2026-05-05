@@ -1,5 +1,5 @@
 using Bogus;
-using CoreAuth.Application.Commands.Users.UpdateUser;
+using DotCruz.CoreAuth.Application.Commands.Users.UpdateUser;
 
 namespace CommonTestUtilities.Requests.Users
 {

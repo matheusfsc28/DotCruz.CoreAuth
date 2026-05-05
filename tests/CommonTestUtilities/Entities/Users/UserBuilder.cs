@@ -1,6 +1,6 @@
 ﻿using Bogus;
-using CoreAuth.Domain.Entities.Users;
-using CoreAuth.Domain.Enums.Users;
+using DotCruz.CoreAuth.Domain.Entities.Users;
+using DotCruz.CoreAuth.Domain.Enums.Users;
 
 namespace CommonTestUtilities.Entities.Users
 {

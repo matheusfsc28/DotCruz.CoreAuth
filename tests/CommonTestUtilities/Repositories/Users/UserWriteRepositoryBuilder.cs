@@ -1,5 +1,5 @@
-using CoreAuth.Domain.Entities.Users;
-using CoreAuth.Domain.Interfaces.Repositories.Users;
+using DotCruz.CoreAuth.Domain.Entities.Users;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
 using Moq;
 
 namespace CommonTestUtilities.Repositories.Users

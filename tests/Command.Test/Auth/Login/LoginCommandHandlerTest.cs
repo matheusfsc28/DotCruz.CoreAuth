@@ -3,9 +3,9 @@ using CommonTestUtilities.Entities.Users;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Requests.Users;
 using CommonTestUtilities.Security;
-using CoreAuth.Domain.Interfaces.Security.Tokens;
-using CoreAuth.Exceptions;
-using CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
+using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Exceptions.BaseExceptions;
 using Moq;
 
 namespace Command.Test.Auth.Login

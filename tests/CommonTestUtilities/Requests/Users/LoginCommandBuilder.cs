@@ -1,5 +1,5 @@
 using Bogus;
-using CoreAuth.Application.Commands.Auth.Login;
+using DotCruz.CoreAuth.Application.Commands.Auth.Login;
 
 namespace CommonTestUtilities.Requests.Users
 {

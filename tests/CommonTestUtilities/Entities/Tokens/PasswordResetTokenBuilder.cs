@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using CoreAuth.Domain.Entities.Tokens;
+using DotCruz.CoreAuth.Domain.Entities.Tokens;
 
 namespace CommonTestUtilities.Entities.Tokens
 {

@@ -1,6 +1,6 @@
 using CommonTestUtilities.Requests.Users;
 using CommonTestUtilities.Validators.Users;
-using CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Exceptions;
 
 namespace Validators.Test.Users.UpdateUser
 {

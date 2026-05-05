@@ -1,4 +1,4 @@
-using CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Domain.Interfaces.Security;
 using Moq;
 
 namespace CommonTestUtilities.Security

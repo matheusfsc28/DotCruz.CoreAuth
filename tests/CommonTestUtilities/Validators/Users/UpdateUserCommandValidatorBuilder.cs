@@ -1,4 +1,4 @@
-using CoreAuth.Application.Commands.Users.UpdateUser;
+using DotCruz.CoreAuth.Application.Commands.Users.UpdateUser;
 
 namespace CommonTestUtilities.Validators.Users
 {

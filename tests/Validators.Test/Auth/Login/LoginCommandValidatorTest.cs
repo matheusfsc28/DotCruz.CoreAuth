@@ -1,6 +1,6 @@
 using CommonTestUtilities.Requests.Users;
-using CoreAuth.Application.Commands.Auth.Login;
-using CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Application.Commands.Auth.Login;
+using DotCruz.CoreAuth.Exceptions;
 
 namespace Validators.Test.Auth.Login
 {

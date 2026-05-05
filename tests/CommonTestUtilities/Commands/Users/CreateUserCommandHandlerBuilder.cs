@@ -1,7 +1,7 @@
-using CoreAuth.Application.Commands.Users.CreateUser;
-using CoreAuth.Domain.Interfaces.Data;
-using CoreAuth.Domain.Interfaces.Repositories.Users;
-using CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Application.Commands.Users.CreateUser;
+using DotCruz.CoreAuth.Domain.Interfaces.Data;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
+using DotCruz.CoreAuth.Domain.Interfaces.Security;
 using CommonTestUtilities.Data;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Security;
