@@ -1,11 +1,11 @@
 using DotCruz.CoreAuth.Common.Settings;
 using DotCruz.CoreAuth.Domain.Entities.Tokens;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
 using DotCruz.CoreAuth.Domain.Interfaces.Data;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
 using DotCruz.CoreAuth.Domain.Interfaces.Security;
 using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
 using MediatR;
 using Microsoft.Extensions.Options;
 

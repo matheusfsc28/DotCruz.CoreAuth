@@ -1,6 +1,6 @@
 using CommonTestUtilities.Requests.Users;
 using DotCruz.CoreAuth.Application.Commands.Auth.Login;
-using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
 namespace Validators.Test.Auth.Login
 {

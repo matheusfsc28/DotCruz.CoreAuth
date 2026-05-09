@@ -1,9 +1,9 @@
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 using DotCruz.CoreAuth.Domain.Interfaces.Data;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
 using DotCruz.CoreAuth.Domain.Interfaces.Security;
 using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
-using DotCruz.CoreAuth.Exceptions;
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
 using MediatR;
 
 namespace DotCruz.CoreAuth.Application.Commands.Auth.PasswordResetTokens.ResetPassword

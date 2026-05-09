@@ -1,4 +1,4 @@
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
 using FluentValidation;
 using MediatR;
 

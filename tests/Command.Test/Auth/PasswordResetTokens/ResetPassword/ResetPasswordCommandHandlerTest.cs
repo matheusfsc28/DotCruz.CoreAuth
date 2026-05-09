@@ -3,9 +3,9 @@ using CommonTestUtilities.Entities.Tokens;
 using CommonTestUtilities.Entities.Users;
 using CommonTestUtilities.Repositories.Tokens;
 using CommonTestUtilities.Requests.Users;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
-using DotCruz.CoreAuth.Exceptions;
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
 using Moq;
 
 namespace Command.Test.Auth.PasswordResetTokens.ResetPassword

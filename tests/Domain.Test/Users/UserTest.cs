@@ -1,6 +1,6 @@
 ﻿using CommonTestUtilities.Entities.Users;
-using DotCruz.CoreAuth.Exceptions;
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
 namespace Domain.Test.Users
 {

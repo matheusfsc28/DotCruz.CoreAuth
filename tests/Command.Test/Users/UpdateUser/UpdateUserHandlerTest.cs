@@ -2,8 +2,8 @@ using CommonTestUtilities.Commands.Users;
 using CommonTestUtilities.Entities.Users;
 using CommonTestUtilities.Repositories.Users;
 using CommonTestUtilities.Requests.Users;
-using DotCruz.CoreAuth.Exceptions;
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
 namespace Command.Test.Users.UpdateUser
 {

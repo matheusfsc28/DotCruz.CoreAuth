@@ -3,7 +3,6 @@
     <Project Path="src/DotCruz.CoreAuth.Application/DotCruz.CoreAuth.Application.csproj" Id="9893eec4-5a55-4f3b-9596-b8b0cb4fcca2" />
     <Project Path="src/DotCruz.CoreAuth.Common/DotCruz.CoreAuth.Common.csproj" Id="2887c21a-b464-4273-b021-d96546232be8" />
     <Project Path="src/DotCruz.CoreAuth.Domain/DotCruz.CoreAuth.Domain.csproj" Id="b2e66a95-b817-4946-b11a-2e34b2530f4b" />
-    <Project Path="src/DotCruz.CoreAuth.Exceptions/DotCruz.CoreAuth.Exceptions.csproj" Id="761fcce2-cf34-411c-95b9-e97ad1c7f3b1" />
     <Project Path="src/DotCruz.CoreAuth.Infrastructure/DotCruz.CoreAuth.Infrastructure.csproj" Id="3f74339d-2640-4c4d-857f-e9e0668e1a1e" />
   </Folder>
   <Folder Name="/tests/">

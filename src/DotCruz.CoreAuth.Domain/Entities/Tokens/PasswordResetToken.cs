@@ -1,7 +1,7 @@
 ﻿using DotCruz.CoreAuth.Domain.Entities.Base;
 using DotCruz.CoreAuth.Domain.Entities.Users;
-using DotCruz.CoreAuth.Exceptions;
-using DotCruz.CoreAuth.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
 namespace DotCruz.CoreAuth.Domain.Entities.Tokens
 {

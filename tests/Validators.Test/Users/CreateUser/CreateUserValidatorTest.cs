@@ -1,6 +1,6 @@
 using CommonTestUtilities.Requests.Users;
 using CommonTestUtilities.Validators.Users;
-using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
 namespace Validators.Test.Users.CreateUser
 {

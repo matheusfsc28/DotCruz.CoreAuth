@@ -1,4 +1,4 @@
-using DotCruz.CoreAuth.Exceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 using FluentValidation;
 
 namespace DotCruz.CoreAuth.Application.Commands.Auth.PasswordResetTokens.ResetPassword

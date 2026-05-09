@@ -1,5 +1,5 @@
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 using FluentValidation;
-using DotCruz.CoreAuth.Exceptions;
 
 namespace DotCruz.CoreAuth.Application.Commands.Auth.Login
 {
