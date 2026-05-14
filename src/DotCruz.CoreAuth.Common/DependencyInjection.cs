@@ -9,6 +9,7 @@ namespace DotCruz.CoreAuth.Common
         public static IServiceCollection AddCommonConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             AddJwtTokenSettings(services, configuration);
+            AddRabbitMqSettings(services, configuration);
 
             return services;
         }
@@ -17,6 +18,13 @@ namespace DotCruz.CoreAuth.Common
         {
             services.Configure<JwtTokenSettings>(
                 configuration.GetSection("Settings:JwtTokenSettings")
+            );
+        }
+
+        private static void AddRabbitMqSettings(IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<RabbitMqSettings>(
+                configuration.GetSection("Settings:RabbitMqSettings")
             );
         }
     }

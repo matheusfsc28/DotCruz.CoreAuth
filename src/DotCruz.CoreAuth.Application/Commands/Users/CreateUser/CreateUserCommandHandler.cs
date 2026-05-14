@@ -1,4 +1,5 @@
-﻿using DotCruz.CoreAuth.Domain.Entities.Users;
+﻿using DotCruz.CoreAuth.Application.Interfaces.Services;
+using DotCruz.CoreAuth.Domain.Entities.Users;
 using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
 using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 using DotCruz.CoreAuth.Domain.Interfaces.Data;
@@ -14,17 +15,20 @@ namespace DotCruz.CoreAuth.Application.Commands.Users.CreateUser
         private readonly IUserReadRepository _userReadRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IEmailService _emailService;
 
         public CreateUserCommandHandler(
             IUserWriteRepository userWriteRepository,
             IUserReadRepository userReadRepository,
             IUnitOfWork unitOfWork,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher,
+            IEmailService emailService)
         {
             _userWriteRepository = userWriteRepository;
             _userReadRepository = userReadRepository;
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
+            _emailService = emailService;
         }
 
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -45,6 +49,8 @@ namespace DotCruz.CoreAuth.Application.Commands.Users.CreateUser
 
             await _userWriteRepository.AddAsync(user, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
+
+            await _emailService.SendWelcomeEmailAsync(user.Email, user.Name, cancellationToken);
 
             return user.Id;
         }

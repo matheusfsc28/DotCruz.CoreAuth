@@ -1,3 +1,5 @@
+﻿using DotCruz.CoreAuth.Application.Interfaces.Services;
+using DotCruz.CoreAuth.Common.Settings;
 using DotCruz.CoreAuth.Domain.Interfaces.Data;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Base;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
@@ -8,6 +10,8 @@ using DotCruz.CoreAuth.Infrastructure.Repositories.Base;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Tokens;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Users;
 using DotCruz.CoreAuth.Infrastructure.Security.Password;
+using DotCruz.CoreAuth.Infrastructure.Services;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +25,8 @@ namespace DotCruz.CoreAuth.Infrastructure
             AddRepositories(services);
             AddUnitOfWork(services);
             AddSecurity(services);
+            AddMassTransit(services, configuration);
+            AddServices(services);
 
             AddDbContext(services, configuration);
 
@@ -50,6 +56,29 @@ namespace DotCruz.CoreAuth.Infrastructure
         private static void AddSecurity(IServiceCollection services)
         {
             services.AddScoped<IPasswordHasher, BCryptHasher>();
+        }
+
+        private static void AddServices(IServiceCollection services)
+        {
+            services.AddScoped<IEmailService, EmailService>();
+        }
+
+        private static void AddMassTransit(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddMassTransit(busConfigurator =>
+            {
+                busConfigurator.UsingRabbitMq((context, cfg) =>
+                {
+                    var rabbitMqSettings = configuration.GetSection("Settings:RabbitMqSettings").Get<RabbitMqSettings>()
+                        ?? throw new Exception("RabbitMqSettings not found in configuration.");
+
+                    cfg.Host(rabbitMqSettings.Host, (ushort)rabbitMqSettings.Port, "/", h =>
+                    {
+                        h.Username(rabbitMqSettings.Username);
+                        h.Password(rabbitMqSettings.Password);
+                    });
+                });
+            });
         }
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
