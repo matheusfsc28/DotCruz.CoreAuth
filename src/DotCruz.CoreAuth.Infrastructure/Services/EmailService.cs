@@ -3,6 +3,7 @@ using DotCruz.Notifications.Contracts.Enums.Notifications;
 using DotCruz.Notifications.Contracts.Messages.Notifications.CreateNotification;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
 
 namespace DotCruz.CoreAuth.Infrastructure.Services
 {
@@ -26,7 +27,7 @@ namespace DotCruz.CoreAuth.Infrastructure.Services
                 ServiceId: _serviceId,
                 Type: IntegrationNotificationType.Email,
                 Recipient: email,
-                Culture: "pt-BR",
+                Culture: CultureInfo.CurrentUICulture.Name,
                 TemplateCode: "RequestPasswordResetCommand",
                 TemplateData: new Dictionary<string, object> 
                 { 
@@ -42,7 +43,7 @@ namespace DotCruz.CoreAuth.Infrastructure.Services
                 ServiceId: _serviceId,
                 Type: IntegrationNotificationType.Email,
                 Recipient: email,
-                Culture: "pt-BR",
+                Culture: CultureInfo.CurrentUICulture.Name,
                 TemplateCode: "CreateUserCommand",
                 TemplateData: new Dictionary<string, object> 
                 { 
