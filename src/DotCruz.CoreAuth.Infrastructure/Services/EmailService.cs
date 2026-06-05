@@ -1,29 +1,29 @@
 using DotCruz.CoreAuth.Application.Interfaces.Services;
 using DotCruz.Notifications.Contracts.Enums.Notifications;
 using DotCruz.Notifications.Contracts.Messages.Notifications.CreateNotification;
-using MassTransit;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using System.Net.Http.Json;
 
 namespace DotCruz.CoreAuth.Infrastructure.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly HttpClient _httpClient;
         private readonly Guid _serviceId;
 
         public EmailService(
-            IPublishEndpoint publishEndpoint,
+            HttpClient httpClient,
             IConfiguration configuration
         )
         {
-            _publishEndpoint = publishEndpoint;
+            _httpClient = httpClient;
             _serviceId = configuration.GetValue<Guid>("ServiceId");
         }
 
         public async Task SendPasswordResetEmailAsync(string email, string name, string token, CancellationToken cancellationToken)
         {
-            await _publishEndpoint.Publish(new CreateNotificationMessage(
+            var message = new CreateNotificationMessage(
                 ServiceId: _serviceId,
                 Type: IntegrationNotificationType.Email,
                 Recipient: email,
@@ -34,12 +34,15 @@ namespace DotCruz.CoreAuth.Infrastructure.Services
                     { "name", name },
                     { "token", token }
                 }
-            ), cancellationToken);
+            );
+
+            var response = await _httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task SendWelcomeEmailAsync(string email, string name, CancellationToken cancellationToken)
         {
-            await _publishEndpoint.Publish(new CreateNotificationMessage(
+            var message = new CreateNotificationMessage(
                 ServiceId: _serviceId,
                 Type: IntegrationNotificationType.Email,
                 Recipient: email,
@@ -49,7 +52,10 @@ namespace DotCruz.CoreAuth.Infrastructure.Services
                 { 
                     { "name", name }
                 }
-            ), cancellationToken);
+            );
+
+            var response = await _httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
+            response.EnsureSuccessStatusCode();
         }
     }
 }
