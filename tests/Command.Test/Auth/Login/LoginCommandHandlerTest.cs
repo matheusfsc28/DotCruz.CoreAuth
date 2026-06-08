@@ -27,7 +27,7 @@ namespace Command.Test.Auth.Login
                 .Build();
 
             var accessTokenGenerator = new Mock<IAccessTokenGenerator>();
-            accessTokenGenerator.Setup(a => a.Generate(user.Id)).Returns("access-token");
+            accessTokenGenerator.Setup(a => a.Generate(user)).Returns("access-token");
 
             var refreshTokenGenerator = new Mock<IRefreshTokenGenerator>();
             refreshTokenGenerator.Setup(r => r.Generate()).Returns("refresh-token");

@@ -1,4 +1,4 @@
-﻿namespace DotCruz.CoreAuth.Domain.Entities.Base
+namespace DotCruz.CoreAuth.Domain.Entities.Base
 {
     public abstract class BaseEntity
     {

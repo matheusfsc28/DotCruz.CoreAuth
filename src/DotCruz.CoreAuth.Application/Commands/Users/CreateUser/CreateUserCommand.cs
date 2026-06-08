@@ -1,5 +1,6 @@
 using DotCruz.CoreAuth.Domain.Enums.Users;
 using MediatR;
+using System;
 
 namespace DotCruz.CoreAuth.Application.Commands.Users.CreateUser
 {
@@ -7,5 +8,6 @@ namespace DotCruz.CoreAuth.Application.Commands.Users.CreateUser
         string Name,
         string Email,
         string Password,
-        UserType Type) : IRequest<Guid>;
+        UserType Type,
+        Guid? TenantId = null) : IRequest<Guid>;
 }

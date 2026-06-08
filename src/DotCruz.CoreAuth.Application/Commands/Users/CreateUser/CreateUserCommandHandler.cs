@@ -1,4 +1,4 @@
-﻿using DotCruz.CoreAuth.Application.Interfaces.Services;
+using DotCruz.CoreAuth.Application.Interfaces.Services;
 using DotCruz.CoreAuth.Domain.Entities.Users;
 using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
 using DotCruz.CoreAuth.Domain.Exceptions.Resources;
@@ -44,7 +44,8 @@ namespace DotCruz.CoreAuth.Application.Commands.Users.CreateUser
                 request.Name,
                 request.Email,
                 passwordHash,
-                request.Type
+                request.Type,
+                request.TenantId
             );
 
             await _userWriteRepository.AddAsync(user, cancellationToken);

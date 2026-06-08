@@ -1,4 +1,5 @@
-﻿using CommonTestUtilities.Entities.Users;
+using CommonTestUtilities.Entities.Users;
+using DotCruz.CoreAuth.Domain.Entities.Users;
 using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
 using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
@@ -24,7 +25,7 @@ namespace Domain.Test.Users
 
             var newData = UserBuilder.Build();
 
-            user.Update(newData.Name, newData.Email, newData.PasswordHash, newData.Type);
+            user.Update(newData.Name, newData.Email, newData.PasswordHash, newData.Type, newData.TenantId);
 
             Assert.Equal(newData.Name, user.Name);
             Assert.Equal(newData.Email, user.Email);
@@ -115,6 +116,39 @@ namespace Domain.Test.Users
             Assert.Contains(ResourceMessagesException.PASSWORD_EMPTY, exception.GetErrorsMessages());
 
             Assert.Single(exception.GetErrorsMessages());
+        }
+
+        [Fact]
+        public void Error_TenantId_Empty_For_TenantUser()
+        {
+            static void Action() => new User("Nome", "email@teste.com", "senha-hash", DotCruz.CoreAuth.Domain.Enums.Users.UserType.TenantUser, null);
+
+            var exception = Assert.Throws<ErrorOnValidationException>(Action);
+
+            Assert.Contains(ResourceMessagesException.TENANT_ID_REQUIRED, exception.GetErrorsMessages());
+
+            Assert.Single(exception.GetErrorsMessages());
+        }
+
+        [Fact]
+        public void Success_On_Create_With_TenantId()
+        {
+            var tenantId = Guid.NewGuid();
+            var user = new User("Nome", "email@teste.com", "senha-hash", DotCruz.CoreAuth.Domain.Enums.Users.UserType.TenantUser, tenantId);
+
+            Assert.NotNull(user);
+            Assert.Equal(tenantId, user.TenantId);
+        }
+
+        [Fact]
+        public void Success_On_Update_To_Global_Clears_TenantId()
+        {
+            var tenantId = Guid.NewGuid();
+            var user = new User("Nome", "email@teste.com", "senha-hash", DotCruz.CoreAuth.Domain.Enums.Users.UserType.TenantUser, tenantId);
+
+            user.Update(null, null, null, DotCruz.CoreAuth.Domain.Enums.Users.UserType.SuperAdmin);
+
+            Assert.Null(user.TenantId);
         }
     }
 }

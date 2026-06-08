@@ -1,4 +1,6 @@
-﻿using DotCruz.CoreAuth.Common.Settings;
+using DotCruz.CoreAuth.Common.Settings;
+using DotCruz.CoreAuth.Domain.Constants;
+using DotCruz.CoreAuth.Domain.Entities.Users;
 using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -16,12 +18,18 @@ namespace DotCruz.CoreAuth.Infrastructure.Security.Tokens.Access.Generator
             _jwtTokenSettings = jwtTokenSettings.Value;
         }
 
-        public string Generate(Guid userId)
+        public string Generate(User user)
         {
             var claims = new List<Claim>()
             {
-                new(ClaimTypes.Sid, userId.ToString())
+                new(ClaimTypes.Sid, user.Id.ToString()),
+                new(ClaimTypes.Role, user.Type.ToString())
             };
+
+            if (user.TenantId.HasValue)
+            {
+                claims.Add(new(CustomClaimTypes.TenantId, user.TenantId.Value.ToString()));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

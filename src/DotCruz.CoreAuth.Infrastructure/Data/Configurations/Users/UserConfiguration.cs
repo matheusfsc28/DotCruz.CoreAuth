@@ -1,4 +1,4 @@
-﻿using DotCruz.CoreAuth.Domain.Entities.Users;
+using DotCruz.CoreAuth.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,6 +31,7 @@ namespace DotCruz.CoreAuth.Infrastructure.Data.Configurations.Users
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.UpdatedAt).IsRequired();
             builder.Property(x => x.DeletedAt).IsRequired(false);
+            builder.Property(x => x.TenantId).IsRequired(false);
         }
     }
 }

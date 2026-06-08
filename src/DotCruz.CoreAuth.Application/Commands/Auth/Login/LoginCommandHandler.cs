@@ -43,17 +43,14 @@ namespace DotCruz.CoreAuth.Application.Commands.Auth.Login
         {
             var email = request.Email.ToLowerInvariant();
 
-            var user = await _userReadRepository.GetUserByEmailAsync(email, cancellationToken);
-
-            if (user is null)
-                throw new InvalidLoginException();
-
+            var user = await _userReadRepository.GetUserByEmailAsync(email, cancellationToken) 
+                ?? throw new InvalidLoginException();
             var passwordMatch = _passwordHasher.VerifyPassword(request.Password, user.PasswordHash);
 
             if (!passwordMatch)
                 throw new InvalidLoginException();
 
-            var accessToken = _accessTokenGenerator.Generate(user.Id);
+            var accessToken = _accessTokenGenerator.Generate(user);
             var refreshTokenString = _refreshTokenGenerator.Generate();
 
             var refreshToken = new RefreshToken(

@@ -1,4 +1,4 @@
-﻿using DotCruz.CoreAuth.Domain.Entities.Base;
+using DotCruz.CoreAuth.Domain.Entities.Base;
 using DotCruz.CoreAuth.Domain.Entities.Tokens;
 using DotCruz.CoreAuth.Domain.Enums.Users;
 using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
@@ -6,7 +6,7 @@ using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
 namespace DotCruz.CoreAuth.Domain.Entities.Users
 {
-    public class User : BaseEntity
+    public class User : TenantEntity
     {
         public string Name { get; private set; }
         public string Email { get; private set; }
@@ -18,22 +18,32 @@ namespace DotCruz.CoreAuth.Domain.Entities.Users
 
         private User() { }
 
-        public User(string name, string email, string passwordHash, UserType type)
+        public User(string name, string email, string passwordHash, UserType type, Guid? tenantId = null)
         {
             Name = name;
             Email = email.ToLowerInvariant();
             PasswordHash = passwordHash;
             Type = type;
+            SetTenantId(tenantId);
 
             Validate();
         }
 
-        public void Update(string? name, string? email, string? passwordHash, UserType? type)
+        public void Update(string? name, string? email, string? passwordHash, UserType? type, Guid? tenantId = null)
         {
             Name = name ?? Name;
             Email = email?.ToLowerInvariant() ?? Email;
             PasswordHash = passwordHash ?? PasswordHash;
             Type = type ?? Type;
+
+            if (Type == UserType.SuperAdmin || Type == UserType.InternalSupport)
+            {
+                SetTenantId(null);
+            }
+            else
+            {
+                SetTenantId(tenantId ?? TenantId);
+            }
 
             Validate();
         }
@@ -56,6 +66,9 @@ namespace DotCruz.CoreAuth.Domain.Entities.Users
 
             if (string.IsNullOrEmpty(PasswordHash))
                 errors.Add(ResourceMessagesException.PASSWORD_EMPTY);
+
+            if ((Type == UserType.TenantAdmin || Type == UserType.TenantUser) && !TenantId.HasValue)
+                errors.Add(ResourceMessagesException.TENANT_ID_REQUIRED);
 
             if (errors.Count > 0)
                 throw new ErrorOnValidationException(errors);

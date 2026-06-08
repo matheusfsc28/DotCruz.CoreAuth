@@ -1,7 +1,9 @@
-﻿namespace DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens
+using DotCruz.CoreAuth.Domain.Entities.Users;
+
+namespace DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens
 {
     public interface IAccessTokenGenerator
     {
-        public string Generate(Guid userId);
+        public string Generate(User user);
     }
 }
