@@ -1,0 +1,102 @@
+using CommonTestUtilities.Entities.Users;
+using CommonTestUtilities.Repositories.Users;
+using DotCruz.CoreAuth.Application.Commands.Users.ChangePassword;
+using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
+using DotCruz.CoreAuth.Domain.Exceptions.Resources;
+using DotCruz.CoreAuth.Domain.Interfaces.Security;
+using FluentAssertions;
+using Moq;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Command.Test.Users.ChangePassword;
+
+public class ChangePasswordCommandHandlerTest
+{
+    [Fact]
+    public async Task Success()
+    {
+        var user = UserBuilder.Build(passwordHashed: "old-hash");
+        var userWriteRepository = new UserWriteRepositoryBuilder()
+            .SetupGetByIdToUpdate(user)
+            .Build();
+
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        passwordHasherMock
+            .Setup(x => x.VerifyPassword("current-pass", "old-hash"))
+            .Returns(true);
+        passwordHasherMock
+            .Setup(x => x.HashPassword("new-pass"))
+            .Returns("new-hash");
+
+        var unitOfWorkMock = new Mock<DotCruz.CoreAuth.Domain.Interfaces.Data.IUnitOfWork>();
+
+        var handler = new ChangePasswordCommandHandler(
+            userWriteRepository,
+            passwordHasherMock.Object,
+            unitOfWorkMock.Object
+        );
+
+        var command = new ChangePasswordCommand(user.Id, "current-pass", "new-pass");
+
+        await handler.Handle(command, CancellationToken.None);
+
+        user.PasswordHash.Should().Be("new-hash");
+        unitOfWorkMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Error_User_NotFound()
+    {
+        var userId = Guid.NewGuid();
+        var userWriteRepository = new UserWriteRepositoryBuilder()
+            .SetupGetByIdToUpdate(userId, null)
+            .Build();
+
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        var unitOfWorkMock = new Mock<DotCruz.CoreAuth.Domain.Interfaces.Data.IUnitOfWork>();
+
+        var handler = new ChangePasswordCommandHandler(
+            userWriteRepository,
+            passwordHasherMock.Object,
+            unitOfWorkMock.Object
+        );
+
+        var command = new ChangePasswordCommand(userId, "current-pass", "new-pass");
+
+        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
+
+        var exception = await act.Should().ThrowAsync<NotFoundException>();
+        exception.And.Message.Should().Be(ResourceMessagesException.USER_NOT_FOUND);
+    }
+
+    [Fact]
+    public async Task Error_Invalid_Password()
+    {
+        var user = UserBuilder.Build(passwordHashed: "old-hash");
+        var userWriteRepository = new UserWriteRepositoryBuilder()
+            .SetupGetByIdToUpdate(user)
+            .Build();
+
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        passwordHasherMock
+            .Setup(x => x.VerifyPassword("wrong-pass", "old-hash"))
+            .Returns(false);
+
+        var unitOfWorkMock = new Mock<DotCruz.CoreAuth.Domain.Interfaces.Data.IUnitOfWork>();
+
+        var handler = new ChangePasswordCommandHandler(
+            userWriteRepository,
+            passwordHasherMock.Object,
+            unitOfWorkMock.Object
+        );
+
+        var command = new ChangePasswordCommand(user.Id, "wrong-pass", "new-pass");
+
+        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
+
+        await act.Should().ThrowAsync<InvalidLoginException>();
+    }
+}
