@@ -1,8 +1,8 @@
-﻿namespace DotCruz.CoreAuth.Application.Interfaces.Services
+namespace DotCruz.CoreAuth.Application.Interfaces.Services;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendPasswordResetEmailAsync(string email, string name, string token, CancellationToken cancellationToken);
-        Task SendWelcomeEmailAsync(string email, string name, CancellationToken cancellationToken);
-    }
+    Task SendPasswordResetEmailAsync(string email, string name, string token, CancellationToken cancellationToken);
+    Task SendWelcomeEmailAsync(string email, string name, CancellationToken cancellationToken);
+    Task SendActivationEmailAsync(string email, string name, string token, CancellationToken cancellationToken);
 }

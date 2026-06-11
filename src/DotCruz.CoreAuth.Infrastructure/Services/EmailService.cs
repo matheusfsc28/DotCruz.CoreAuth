@@ -5,57 +5,68 @@ using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using System.Net.Http.Json;
 
-namespace DotCruz.CoreAuth.Infrastructure.Services
+namespace DotCruz.CoreAuth.Infrastructure.Services;
+
+public class EmailService(
+    HttpClient httpClient,
+    IConfiguration configuration
+) : IEmailService
 {
-    public class EmailService : IEmailService
+    private readonly Guid _serviceId = configuration.GetValue<Guid>("ServiceId");
+
+    public async Task SendPasswordResetEmailAsync(string email, string name, string token, CancellationToken cancellationToken)
     {
-        private readonly HttpClient _httpClient;
-        private readonly Guid _serviceId;
+        var message = new CreateNotificationMessage(
+            ServiceId: _serviceId,
+            Type: IntegrationNotificationType.Email,
+            Recipient: email,
+            Culture: CultureInfo.CurrentUICulture.Name,
+            TemplateCode: "RequestPasswordResetCommand",
+            TemplateData: new Dictionary<string, object> 
+            { 
+                { "name", name },
+                { "token", token }
+            }
+        );
 
-        public EmailService(
-            HttpClient httpClient,
-            IConfiguration configuration
-        )
-        {
-            _httpClient = httpClient;
-            _serviceId = configuration.GetValue<Guid>("ServiceId");
-        }
+        var response = await httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
-        public async Task SendPasswordResetEmailAsync(string email, string name, string token, CancellationToken cancellationToken)
-        {
-            var message = new CreateNotificationMessage(
-                ServiceId: _serviceId,
-                Type: IntegrationNotificationType.Email,
-                Recipient: email,
-                Culture: CultureInfo.CurrentUICulture.Name,
-                TemplateCode: "RequestPasswordResetCommand",
-                TemplateData: new Dictionary<string, object> 
-                { 
-                    { "name", name },
-                    { "token", token }
-                }
-            );
+    public async Task SendWelcomeEmailAsync(string email, string name, CancellationToken cancellationToken)
+    {
+        var message = new CreateNotificationMessage(
+            ServiceId: _serviceId,
+            Type: IntegrationNotificationType.Email,
+            Recipient: email,
+            Culture: CultureInfo.CurrentUICulture.Name,
+            TemplateCode: "CreateUserCommand",
+            TemplateData: new Dictionary<string, object> 
+            { 
+                { "name", name }
+            }
+        );
 
-            var response = await _httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
-            response.EnsureSuccessStatusCode();
-        }
+        var response = await httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
-        public async Task SendWelcomeEmailAsync(string email, string name, CancellationToken cancellationToken)
-        {
-            var message = new CreateNotificationMessage(
-                ServiceId: _serviceId,
-                Type: IntegrationNotificationType.Email,
-                Recipient: email,
-                Culture: CultureInfo.CurrentUICulture.Name,
-                TemplateCode: "CreateUserCommand",
-                TemplateData: new Dictionary<string, object> 
-                { 
-                    { "name", name }
-                }
-            );
+    public async Task SendActivationEmailAsync(string email, string name, string token, CancellationToken cancellationToken)
+    {
+        var message = new CreateNotificationMessage(
+            ServiceId: _serviceId,
+            Type: IntegrationNotificationType.Email,
+            Recipient: email,
+            Culture: CultureInfo.CurrentUICulture.Name,
+            TemplateCode: "ActivateAccountCommand",
+            TemplateData: new Dictionary<string, object> 
+            { 
+                { "name", name },
+                { "token", token }
+            }
+        );
 
-            var response = await _httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
-            response.EnsureSuccessStatusCode();
-        }
+        var response = await httpClient.PostAsJsonAsync("api/Notification", message, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 }
