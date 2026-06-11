@@ -5,21 +5,26 @@ using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Base;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
 using DotCruz.CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
 using DotCruz.CoreAuth.Infrastructure.Data;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Base;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Tokens;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Users;
 using DotCruz.CoreAuth.Infrastructure.Security.Password;
+using DotCruz.CoreAuth.Infrastructure.Security.Tokens;
+using DotCruz.CoreAuth.Infrastructure.Security.Tokens.Access.Generator;
+using DotCruz.CoreAuth.Infrastructure.Security.Tokens.Access.Validator;
+using DotCruz.CoreAuth.Infrastructure.Security.Tokens.Refresh;
 using DotCruz.CoreAuth.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace DotCruz.CoreAuth.Infrastructure
+namespace DotCruz.CoreAuth.Infrastructure;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
-    {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             AddRepositories(services);
@@ -40,6 +45,9 @@ namespace DotCruz.CoreAuth.Infrastructure
             services.AddScoped<IPasswordResetTokenReadRepository, PasswordResetTokenRepository>();
             services.AddScoped<IPasswordResetTokenWriteRepository, PasswordResetTokenRepository>();
 
+            services.AddScoped<IActivationTokenReadRepository, ActivationTokenRepository>();
+            services.AddScoped<IActivationTokenWriteRepository, ActivationTokenRepository>();
+
             services.AddScoped<IRefreshTokenReadRepository, RefreshTokenRepository>();
             services.AddScoped<IRefreshTokenWriteRepository, RefreshTokenRepository>();
 
@@ -55,6 +63,10 @@ namespace DotCruz.CoreAuth.Infrastructure
         private static void AddSecurity(IServiceCollection services)
         {
             services.AddScoped<IPasswordHasher, BCryptHasher>();
+            services.AddScoped<IAccessTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+            services.AddScoped<IAccessTokenValidator, JwtTokenValidator>();
+            services.AddScoped<ITokenProvider, CryptographyTokenProvider>();
         }
 
         private static void AddServices(IServiceCollection services, IConfiguration configuration)
@@ -80,4 +92,3 @@ namespace DotCruz.CoreAuth.Infrastructure
             });
         }
     }
-}

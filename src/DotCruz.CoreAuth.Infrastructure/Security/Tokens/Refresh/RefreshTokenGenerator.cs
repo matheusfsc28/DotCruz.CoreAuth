@@ -1,9 +1,8 @@
-﻿using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
 
-namespace DotCruz.CoreAuth.Infrastructure.Security.Tokens.Refresh
+namespace DotCruz.CoreAuth.Infrastructure.Security.Tokens.Refresh;
+
+public class RefreshTokenGenerator : IRefreshTokenGenerator
 {
-    public class RefreshTokenGeneratorRefreshTokenGenerator : IRefreshTokenGenerator
-    {
-        public string Generate() => Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-    }
+    public string Generate() => Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 }
