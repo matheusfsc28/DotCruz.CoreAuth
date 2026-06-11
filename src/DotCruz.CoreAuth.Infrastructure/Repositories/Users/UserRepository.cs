@@ -1,23 +1,35 @@
-﻿using DotCruz.CoreAuth.Domain.Entities.Users;
+using DotCruz.CoreAuth.Domain.Entities.Users;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
 using DotCruz.CoreAuth.Infrastructure.Data;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotCruz.CoreAuth.Infrastructure.Repositories.Users
+namespace DotCruz.CoreAuth.Infrastructure.Repositories.Users;
+
+public class UserRepository(CoreAuthDbContext context) 
+    : BaseRepository<User>(context), IUserReadRepository, IUserWriteRepository
 {
-    public class UserRepository : BaseRepository<User>, IUserReadRepository, IUserWriteRepository
+    public async Task<bool> ExistsActiveUserWithEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        public UserRepository(CoreAuthDbContext context) : base(context) { }
+        return await _dbSet.AsNoTracking().AnyAsync(u => u.Email == email, cancellationToken);
+    }
 
-        public async Task<bool> ExistsActiveUserWithEmailAsync(string email, CancellationToken cancellationToken = default)
-        {
-            return await _dbSet.AsNoTracking().AnyAsync(u => u.Email == email, cancellationToken);
-        }
+    public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+    }
 
-        public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
-        {
-            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-        }
+    public async Task<(IEnumerable<User> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var query = _dbSet.AsNoTracking();
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(u => u.Name)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
     }
 }
