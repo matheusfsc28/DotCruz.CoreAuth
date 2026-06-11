@@ -193,3 +193,8 @@ FakesAssemblies/
 
 /.sonarqube
 coverage.opencover.xml
+
+# Credentials
+appsettings.json
+appsettings.*.json
+!appsettings.Example.json

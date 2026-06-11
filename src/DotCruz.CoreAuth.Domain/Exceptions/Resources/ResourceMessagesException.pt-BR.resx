@@ -165,4 +165,7 @@
   <data name="TENANT_ID_REQUIRED" xml:space="preserve">
     <value>O TenantId é obrigatório para administradores e usuários de inquilinos.</value>
   </data>
+  <data name="UNKNOWN_ERROR" xml:space="preserve">
+    <value>Erro desconhecido.</value>
+  </data>
 </root>

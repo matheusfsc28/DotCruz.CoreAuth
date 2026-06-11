@@ -165,4 +165,7 @@
   <data name="TENANT_ID_REQUIRED" xml:space="preserve">
     <value>TenantId is required for tenant administrators and users.</value>
   </data>
+  <data name="UNKNOWN_ERROR" xml:space="preserve">
+    <value>Unknown error.</value>
+  </data>
 </root>
