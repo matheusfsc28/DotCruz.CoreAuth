@@ -8,11 +8,11 @@ namespace DotCruz.CoreAuth.Domain.Entities.Tokens
     public class RefreshToken : BaseEntity
     {
         public string Token { get; private set; }
-        public DateTime ExpiresAt { get; private set; }
-        public DateTime? RevokedAt { get; private set; }
+        public DateTimeOffset ExpiresAt { get; private set; }
+        public DateTimeOffset? RevokedAt { get; private set; }
         public Guid UserId { get; private set; }
 
-        public bool IsExpired => DateTime.UtcNow >= ExpiresAt;
+        public bool IsExpired => DateTimeOffset.UtcNow >= ExpiresAt;
         public bool IsRevoked => RevokedAt.HasValue;
         public bool IsActive => !IsRevoked && !IsExpired;
 
@@ -20,7 +20,7 @@ namespace DotCruz.CoreAuth.Domain.Entities.Tokens
 
         private RefreshToken() { }
 
-        public RefreshToken(string token, DateTime expiresAt, Guid userId)
+        public RefreshToken(string token, DateTimeOffset expiresAt, Guid userId)
         {
             Token = token;
             ExpiresAt = expiresAt;
@@ -46,7 +46,7 @@ namespace DotCruz.CoreAuth.Domain.Entities.Tokens
         public void Revoke()
         {
             if (IsActive)
-                RevokedAt = DateTime.UtcNow;
+                RevokedAt = DateTimeOffset.UtcNow;
         }
     }
 }

@@ -1,12 +1,25 @@
-﻿using DotCruz.CoreAuth.Domain.Entities.Tokens;
+using DotCruz.CoreAuth.Domain.Entities.Tokens;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
 using DotCruz.CoreAuth.Infrastructure.Data;
 using DotCruz.CoreAuth.Infrastructure.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
 
-namespace DotCruz.CoreAuth.Infrastructure.Repositories.Tokens
+namespace DotCruz.CoreAuth.Infrastructure.Repositories.Tokens;
+
+public class RefreshTokenRepository(CoreAuthDbContext context) 
+    : BaseRepository<RefreshToken>(context), IRefreshTokenReadRepository, IRefreshTokenWriteRepository
 {
-    public class RefreshTokenRepository : BaseRepository<RefreshToken>, IRefreshTokenReadRepository, IRefreshTokenWriteRepository
+    public async Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken)
     {
-        public RefreshTokenRepository(CoreAuthDbContext context) : base(context) { }
+        return await _dbSet
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt => rt.Token == token, cancellationToken);
+    }
+
+    public async Task<IEnumerable<RefreshToken>> GetActiveTokensByUserIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Where(rt => rt.UserId == userId && rt.RevokedAt == null && rt.ExpiresAt > DateTime.UtcNow)
+            .ToListAsync(cancellationToken);
     }
 }
