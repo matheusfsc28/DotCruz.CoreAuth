@@ -3,35 +3,33 @@ using DotCruz.CoreAuth.Application.Commands.Users.CreateUser;
 using DotCruz.CoreAuth.Domain.Enums.Users;
 using System;
 
-namespace CommonTestUtilities.Requests.Users
+namespace CommonTestUtilities.Requests.Users;
+
+public class CreateUserCommandBuilder
 {
-    public class CreateUserCommandBuilder
+    public static CreateUserCommand Build(Guid? tenantId = null)
     {
-        public static CreateUserCommand Build(int passwordLength = 10, Guid? tenantId = null)
-        {
-            return new Faker<CreateUserCommand>()
-                .CustomInstantiator(f =>
+        return new Faker<CreateUserCommand>()
+            .CustomInstantiator(f =>
+            {
+                var type = f.PickRandom<UserType>();
+                Guid? resolvedTenantId = tenantId;
+
+                if ((type == UserType.TenantAdmin || type == UserType.TenantUser) && !resolvedTenantId.HasValue)
                 {
-                    var type = f.PickRandom<UserType>();
-                    Guid? resolvedTenantId = tenantId;
+                    resolvedTenantId = Guid.NewGuid();
+                }
+                else if (type == UserType.SuperAdmin || type == UserType.InternalSupport)
+                {
+                    resolvedTenantId = null;
+                }
 
-                    if ((type == UserType.TenantAdmin || type == UserType.TenantUser) && !resolvedTenantId.HasValue)
-                    {
-                        resolvedTenantId = Guid.NewGuid();
-                    }
-                    else if (type == UserType.SuperAdmin || type == UserType.InternalSupport)
-                    {
-                        resolvedTenantId = null;
-                    }
-
-                    return new CreateUserCommand(
-                        f.Person.FullName,
-                        f.Internet.Email(f.Person.FirstName),
-                        f.Internet.Password(passwordLength),
-                        type,
-                        resolvedTenantId
-                    );
-                });
-        }
+                return new CreateUserCommand(
+                    f.Person.FullName,
+                    f.Internet.Email(f.Person.FirstName),
+                    type,
+                    resolvedTenantId
+                );
+            });
     }
 }

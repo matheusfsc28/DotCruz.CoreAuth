@@ -1,38 +1,64 @@
-﻿using DotCruz.CoreAuth.Application.Commands.Users.CreateUser;
+using DotCruz.CoreAuth.Application.Commands.Users.CreateUser;
 using DotCruz.CoreAuth.Domain.Interfaces.Data;
 using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Users;
-using DotCruz.CoreAuth.Domain.Interfaces.Security;
+using DotCruz.CoreAuth.Domain.Interfaces.Repositories.Tokens;
+using DotCruz.CoreAuth.Domain.Interfaces.Security.Tokens;
 using DotCruz.CoreAuth.Application.Interfaces.Services;
 using CommonTestUtilities.Data;
 using CommonTestUtilities.Repositories.Users;
-using CommonTestUtilities.Security;
 using CommonTestUtilities.Services;
+using Moq;
 
-namespace CommonTestUtilities.Commands.Users
+namespace CommonTestUtilities.Commands.Users;
+
+public class CreateUserCommandHandlerBuilder
 {
-    public class CreateUserCommandHandlerBuilder
+    private IUserWriteRepository _userWriteRepository = UserWriteRepositoryBuilder.BuildStatic();
+    private IUserReadRepository _userReadRepository = new UserReadRepositoryBuilder().Build();
+    private IUnitOfWork _unitOfWork = UnitOfWorkBuilder.Build();
+    private IEmailService _emailService = EmailServiceBuilder.Build();
+    private ITokenProvider _tokenProvider = new Mock<ITokenProvider>().Object;
+    private IActivationTokenWriteRepository _activationTokenWriteRepository = new Mock<IActivationTokenWriteRepository>().Object;
+
+    public CreateUserCommandHandlerBuilder SetUserReadRepository(IUserReadRepository userReadRepository)
     {
-        private IUserWriteRepository _userWriteRepository = UserWriteRepositoryBuilder.BuildStatic();
-        private IUserReadRepository _userReadRepository = new UserReadRepositoryBuilder().Build();
-        private IUnitOfWork _unitOfWork = UnitOfWorkBuilder.Build();
-        private IPasswordHasher _passwordHasher = new PasswordHasherBuilder().Build();
-        private IEmailService _emailService = EmailServiceBuilder.Build();
+        _userReadRepository = userReadRepository;
+        return this;
+    }
 
-        public CreateUserCommandHandlerBuilder SetUserReadRepository(IUserReadRepository userReadRepository)
-        {
-            _userReadRepository = userReadRepository;
-            return this;
-        }
+    public CreateUserCommandHandlerBuilder SetUserWriteRepository(IUserWriteRepository userWriteRepository)
+    {
+        _userWriteRepository = userWriteRepository;
+        return this;
+    }
 
-        public CreateUserCommandHandler Build()
-        {
-            return new CreateUserCommandHandler(
-                _userWriteRepository,
-                _userReadRepository,
-                _unitOfWork,
-                _passwordHasher,
-                _emailService
-            );
-        }
+    public CreateUserCommandHandlerBuilder SetEmailService(IEmailService emailService)
+    {
+        _emailService = emailService;
+        return this;
+    }
+
+    public CreateUserCommandHandlerBuilder SetTokenProvider(ITokenProvider tokenProvider)
+    {
+        _tokenProvider = tokenProvider;
+        return this;
+    }
+
+    public CreateUserCommandHandlerBuilder SetActivationTokenWriteRepository(IActivationTokenWriteRepository activationTokenWriteRepository)
+    {
+        _activationTokenWriteRepository = activationTokenWriteRepository;
+        return this;
+    }
+
+    public CreateUserCommandHandler Build()
+    {
+        return new CreateUserCommandHandler(
+            _userWriteRepository,
+            _userReadRepository,
+            _unitOfWork,
+            _emailService,
+            _tokenProvider,
+            _activationTokenWriteRepository
+        );
     }
 }
