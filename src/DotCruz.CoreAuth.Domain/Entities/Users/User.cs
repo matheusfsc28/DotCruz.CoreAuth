@@ -4,74 +4,91 @@ using DotCruz.CoreAuth.Domain.Enums.Users;
 using DotCruz.CoreAuth.Domain.Exceptions.BaseExceptions;
 using DotCruz.CoreAuth.Domain.Exceptions.Resources;
 
-namespace DotCruz.CoreAuth.Domain.Entities.Users
+namespace DotCruz.CoreAuth.Domain.Entities.Users;
+
+public class User : TenantEntity
 {
-    public class User : TenantEntity
+    public string Name { get; private set; }
+    public string Email { get; private set; }
+    public string? PasswordHash { get; private set; }
+    public UserType Type { get; private set; }
+    public UserStatus Status { get; private set; }
+
+    public IEnumerable<PasswordResetToken> PasswordResetTokens { get; private set; } = [];
+    public IEnumerable<RefreshToken> RefreshTokens { get; private set; } = [];
+
+    private User() { }
+
+    public User(string name, string email, UserType type, Guid? tenantId)
     {
-        public string Name { get; private set; }
-        public string Email { get; private set; }
-        public string PasswordHash { get; private set; }
-        public UserType Type { get; private set; }
+        Name = name;
+        Email = email.ToLowerInvariant();
+        Type = type;
+        Status = UserStatus.PendingActivation;
+        SetTenantId(tenantId);
 
-        public IEnumerable<PasswordResetToken> PasswordResetTokens { get; private set; } = [];
-        public IEnumerable<RefreshToken> RefreshTokens { get; private set; } = [];
+        Validate();
+    }
 
-        private User() { }
+    public void Update(string? name, string? email, string? passwordHash, UserType? type, Guid? tenantId = null)
+    {
+        Name = name ?? Name;
+        Email = email?.ToLowerInvariant() ?? Email;
+        PasswordHash = passwordHash ?? PasswordHash;
+        Type = type ?? Type;
 
-        public User(string name, string email, string passwordHash, UserType type, Guid? tenantId = null)
+        if (Type == UserType.SuperAdmin || Type == UserType.InternalSupport)
         {
-            Name = name;
-            Email = email.ToLowerInvariant();
-            PasswordHash = passwordHash;
-            Type = type;
-            SetTenantId(tenantId);
-
-            Validate();
+            SetTenantId(null);
+        }
+        else
+        {
+            SetTenantId(tenantId ?? TenantId);
         }
 
-        public void Update(string? name, string? email, string? passwordHash, UserType? type, Guid? tenantId = null)
-        {
-            Name = name ?? Name;
-            Email = email?.ToLowerInvariant() ?? Email;
-            PasswordHash = passwordHash ?? PasswordHash;
-            Type = type ?? Type;
+        Validate();
+    }
 
-            if (Type == UserType.SuperAdmin || Type == UserType.InternalSupport)
-            {
-                SetTenantId(null);
-            }
-            else
-            {
-                SetTenantId(tenantId ?? TenantId);
-            }
+    public void Activate(string passwordHash)
+    {
+        if (Status != UserStatus.PendingActivation)
+            throw new ErrorOnValidationException(ResourceMessagesException.TOKEN_INVALID);
 
-            Validate();
-        }
+        PasswordHash = passwordHash;
+        Status = UserStatus.Active;
 
-        private void Validate()
-        {
-            var errors = new List<string>();
+        Validate();
+    }
 
-            if (string.IsNullOrEmpty(Name))
-                errors.Add(ResourceMessagesException.NAME_EMPTY);
+    public void ChangePassword(string passwordHash)
+    {
+        PasswordHash = passwordHash;
+        Validate();
+    }
 
-            if (Name.Length > 200)
-                errors.Add(string.Format(ResourceMessagesException.NAME_MAX_LENGTH, 200));
+    private void Validate()
+    {
+        var errors = new List<string>();
 
-            if (string.IsNullOrEmpty(Email))
-                errors.Add(ResourceMessagesException.EMAIL_EMPTY);
+        if (string.IsNullOrEmpty(Name))
+            errors.Add(ResourceMessagesException.NAME_EMPTY);
 
-            if (Email.Length > 200)
-                errors.Add(string.Format(ResourceMessagesException.EMAIL_MAX_LENGTH, 200));
+        if (Name.Length > 200)
+            errors.Add(string.Format(ResourceMessagesException.NAME_MAX_LENGTH, 200));
 
-            if (string.IsNullOrEmpty(PasswordHash))
-                errors.Add(ResourceMessagesException.PASSWORD_EMPTY);
+        if (string.IsNullOrEmpty(Email))
+            errors.Add(ResourceMessagesException.EMAIL_EMPTY);
 
-            if ((Type == UserType.TenantAdmin || Type == UserType.TenantUser) && !TenantId.HasValue)
-                errors.Add(ResourceMessagesException.TENANT_ID_REQUIRED);
+        if (Email.Length > 200)
+            errors.Add(string.Format(ResourceMessagesException.EMAIL_MAX_LENGTH, 200));
 
-            if (errors.Count > 0)
-                throw new ErrorOnValidationException(errors);
-        }
+        if (Status != UserStatus.PendingActivation && string.IsNullOrEmpty(PasswordHash))
+            errors.Add(ResourceMessagesException.PASSWORD_EMPTY);
+
+        if ((Type == UserType.TenantAdmin || Type == UserType.TenantUser) && !TenantId.HasValue)
+            errors.Add(ResourceMessagesException.TENANT_ID_REQUIRED);
+
+        if (errors.Count > 0)
+            throw new ErrorOnValidationException(errors);
     }
 }

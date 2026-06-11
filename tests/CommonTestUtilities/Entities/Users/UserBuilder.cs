@@ -2,44 +2,68 @@ using Bogus;
 using DotCruz.CoreAuth.Domain.Entities.Users;
 using DotCruz.CoreAuth.Domain.Enums.Users;
 
-namespace CommonTestUtilities.Entities.Users
+namespace CommonTestUtilities.Entities.Users;
+
+public class UserBuilder
 {
-    public class UserBuilder
+    public static User Build(
+        string? name = null, 
+        string? email = null, 
+        string? passwordHashed = null,
+        int nameLength = 10,
+        int emailLength = 10,
+        Guid? tenantId = null,
+        UserStatus status = UserStatus.Active
+    )
     {
-        public static User Build(
-            string? name = null, 
-            string? email = null, 
-            string? passwordHashed = null,
-            int nameLength = 10,
-            int emailLength = 10,
-            Guid? tenantId = null
-        )
-        {
-            var userFaker = new Faker<User>()
-                .CustomInstantiator(f =>
+        var userFaker = new Faker<User>()
+            .CustomInstantiator(f =>
+            {
+                var type = f.PickRandom<UserType>();
+                Guid? resolvedTenantId = tenantId;
+
+                if ((type == UserType.TenantAdmin || type == UserType.TenantUser) && !resolvedTenantId.HasValue)
                 {
-                    var type = f.PickRandom<UserType>();
-                    Guid? resolvedTenantId = tenantId;
+                    resolvedTenantId = Guid.NewGuid();
+                }
+                else if (type == UserType.SuperAdmin || type == UserType.InternalSupport)
+                {
+                    resolvedTenantId = null; // Garante nulidade para globais
+                }
 
-                    if ((type == UserType.TenantAdmin || type == UserType.TenantUser) && !resolvedTenantId.HasValue)
-                    {
-                        resolvedTenantId = Guid.NewGuid();
-                    }
-                    else if (type == UserType.SuperAdmin || type == UserType.InternalSupport)
-                    {
-                        resolvedTenantId = null; // Garante nulidade para globais
-                    }
+                return new User(
+                    name ?? f.Person.FullName.PadRight(nameLength, 'a'),
+                    email ?? f.Internet.Email(f.Person.FirstName).PadRight(emailLength, 'a'),
+                    type,
+                    resolvedTenantId
+                );
+            });
 
-                    return new User(
-                        name ?? f.Person.FullName.PadRight(nameLength, 'a'),
-                        email ?? f.Internet.Email(f.Person.FirstName).PadRight(emailLength, 'a'),
-                        passwordHashed ?? f.Internet.Password(),
-                        type,
-                        resolvedTenantId
-                    );
-                });
+        var user = userFaker.Generate();
 
-            return userFaker.Generate();
+        // Use reflection to set private fields/properties that are not settable via constructor
+        var statusProp = typeof(User).GetProperty("Status");
+        statusProp?.SetValue(user, status);
+
+        string? finalPasswordHash = passwordHashed;
+        if (status != UserStatus.PendingActivation && passwordHashed == null)
+        {
+            finalPasswordHash = "default-password-hash";
         }
+        var passwordHashProp = typeof(User).GetProperty("PasswordHash");
+        passwordHashProp?.SetValue(user, finalPasswordHash);
+
+        // Run Validate method via reflection to ensure exceptions are thrown for invalid configurations
+        var validateMethod = typeof(User).GetMethod("Validate", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        try
+        {
+            validateMethod?.Invoke(user, null);
+        }
+        catch (System.Reflection.TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            throw ex.InnerException;
+        }
+
+        return user;
     }
 }
