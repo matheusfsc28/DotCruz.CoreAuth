@@ -1,9 +1,14 @@
 using DotCruz.CoreAuth.Api.Filters;
 using DotCruz.CoreAuth.Api.Middlewares;
+using DotCruz.CoreAuth.Application;
+using DotCruz.CoreAuth.Infrastructure;
+using DotCruz.CoreAuth.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddCommonConfiguration(builder.Configuration);
 
 builder.Services.AddControllers(options =>
 {

@@ -65,7 +65,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
         if (refreshToken != null && refreshToken.User?.Status != UserStatus.Active)
             errors.Add(ResourceMessagesException.USER_NOT_FOUND);
 
-        throw new ErrorOnValidationException(errors);
+        if (errors.Count > 0)
+            throw new ErrorOnValidationException(errors);
     }
 
     private async Task<string> CreateNewRefreshToken(Guid userId, CancellationToken cancellationToken)

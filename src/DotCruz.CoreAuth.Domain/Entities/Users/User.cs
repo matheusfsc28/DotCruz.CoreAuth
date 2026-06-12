@@ -14,8 +14,8 @@ public class User : TenantEntity
     public UserType Type { get; private set; }
     public UserStatus Status { get; private set; }
 
-    public IEnumerable<PasswordResetToken> PasswordResetTokens { get; private set; } = [];
-    public IEnumerable<RefreshToken> RefreshTokens { get; private set; } = [];
+    public IEnumerable<PasswordResetToken> PasswordResetTokens { get; private set; } = new List<PasswordResetToken>();
+    public IEnumerable<RefreshToken> RefreshTokens { get; private set; } = new List<RefreshToken>();
 
     private User() { }
 
@@ -38,13 +38,9 @@ public class User : TenantEntity
         Type = type ?? Type;
 
         if (Type == UserType.SuperAdmin || Type == UserType.InternalSupport)
-        {
             SetTenantId(null);
-        }
         else
-        {
             SetTenantId(tenantId ?? TenantId);
-        }
 
         Validate();
     }

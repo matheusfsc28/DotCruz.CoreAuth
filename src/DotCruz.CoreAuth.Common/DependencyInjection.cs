@@ -1,4 +1,4 @@
-﻿using DotCruz.CoreAuth.Common.Settings;
+using DotCruz.CoreAuth.Common.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +10,7 @@ namespace DotCruz.CoreAuth.Common
         {
             AddJwtTokenSettings(services, configuration);
             AddRabbitMqSettings(services, configuration);
+            AddPasswordResetTokenSettings(services, configuration);
 
             return services;
         }
@@ -25,6 +26,13 @@ namespace DotCruz.CoreAuth.Common
         {
             services.Configure<RabbitMqSettings>(
                 configuration.GetSection("Settings:RabbitMqSettings")
+            );
+        }
+
+        private static void AddPasswordResetTokenSettings(IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<PasswordResetTokenSettings>(
+                configuration.GetSection("Settings:PasswordResetTokenSettings")
             );
         }
     }

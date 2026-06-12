@@ -42,10 +42,11 @@ public class RefreshTokenCommandHandlerTests
             .SetRefreshTokenGenerator(refreshTokenGenerator.Object)
             .Build();
 
-        var act = () => handler.Handle(command, TestContext.Current.CancellationToken);
+        var result = await handler.Handle(command, TestContext.Current.CancellationToken);
 
-        var exception = await Assert.ThrowsAsync<ErrorOnValidationException>(act);
-        exception.GetErrorsMessages().Should().BeEmpty();
+        result.Should().NotBeNull();
+        result.AccessToken.Should().Be("new-access-token");
+        result.RefreshToken.Should().Be("new-refresh-token");
     }
 
     [Fact]
